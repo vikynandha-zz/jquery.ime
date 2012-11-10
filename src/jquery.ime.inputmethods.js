@@ -62,6 +62,10 @@
 			name: 'Transliteration',
 			source: 'rules/eo/eo-transliteration.js'
 		},
+		'fi-transliteration': {
+			name: 'translitterointi',
+			source: 'rules/fi/fi-transliteration.js'
+		},
 		'hi-transliteration': {
 			name: 'लिप्यंतरण',
 			source: 'rules/hi/hi-transliteration.js'
@@ -230,6 +234,10 @@
 		'ur-transliteration': {
 			name: 'Transliteration',
 			source: 'rules/ur/ur-transliteration.js'
+		},
+		'mn-cyrl': {
+			name: 'Cyrillc',
+			source: 'rules/mn/mn-cyrl.js'
 		}
 	} );
 
@@ -282,6 +290,10 @@
 			autonym: 'Esperanto',
 			inputmethods: [ 'eo-transliteration' ]
 		},
+		'fi': {
+			autonym: 'Suomi',
+			inputmethods: [ 'fi-transliteration' ]
+		},
 		'gom': {
 			autonym: 'कोंकणी',
 			inputmethods: [ 'hi-transliteration', 'hi-inscript' ]
@@ -333,6 +345,10 @@
 		'ml': {
 			autonym: 'മലയാളം',
 			inputmethods: [ 'ml-transliteration', 'ml-inscript' ]
+		},
+		'mn': {
+			autonym: 'Монгол',
+			inputmethods: [ 'mn-cyrl' ]
 		},
 		'mr': {
 			autonym: 'मराठी',
