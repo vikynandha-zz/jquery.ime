@@ -27,7 +27,8 @@
 			// With correct event mapping we can probably reduce it to one menu.
 			this.$imeSetting = $( selectorTemplate );
 			this.$menu = $( '<div class="imeselector-menu" role="menu">' );
-			this.$menu.append( imeList() )
+			this.$menu.append( imeListTitle() )
+				.append( imeList() )
 				.append( toggleMenuItem() )
 				.append( languageListTitle() );
 			this.prepareLanguageList();
@@ -154,13 +155,20 @@
 		 * @param languageCode
 		 */
 		selectLanguage: function ( languageCode ) {
-			var language;
+			var language, ime;
 
+			ime = this.$element.data( 'ime' );
 			language = $.ime.languages[languageCode];
 
 			if ( !language ) {
 				return false;
 			}
+
+			if ( ime.getLanguage() === languageCode ) {
+				// nothing to do. It is same as the current language
+				return false;
+			}
+
 			this.$menu.find( 'li.ime-lang' ).show();
 			this.$menu.find( 'li[lang=' + languageCode + ']' ).hide();
 
@@ -168,7 +176,7 @@
 			this.prepareInputMethods( languageCode );
 			this.hide();
 			// And select the default inputmethod
-			this.$element.data( 'ime' ).setLanguage( languageCode );
+			ime.setLanguage( languageCode );
 			this.inputmethod = null;
 			this.selectIM( $.ime.preferences.getIM( languageCode ) );
 		},
@@ -342,8 +350,11 @@
 	}
 
 	function imeList () {
-		return $( '<h3>' ).addClass( 'ime-list-title' )
-			.append( $( '<ul>').addClass( 'ime-list' ) );
+		return  $( '<ul>' ).addClass( 'ime-list' );
+	}
+
+	function imeListTitle () {
+		return  $( '<h3>' ).addClass( 'ime-list-title' );
 	}
 
 	function toggleMenuItem () {

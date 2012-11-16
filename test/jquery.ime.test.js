@@ -1,4 +1,4 @@
-﻿( function ( $ ) {
+( function ( $ ) {
 	'use strict';
 
 	var $textarea, textareaIME,
@@ -91,13 +91,21 @@
 
 	} );
 
-	QUnit.test( 'Preferences tests', 2, function ( assert ) {
+	QUnit.test( 'Preferences tests', 5, function ( assert ) {
 		$.ime.preferences.registry.previousLanguages = [];
 		$.ime.preferences.setLanguage( 'hi' );
+
 		assert.strictEqual( $.ime.preferences.getPreviousLanguages().length, 1, 'Hindi added to previous languages' );
 		// set it again
 		$.ime.preferences.setLanguage( 'hi' );
 		assert.strictEqual( $.ime.preferences.getPreviousLanguages().length, 1, 'Hindi not duplicated in previous languages' );
+		$.ime.preferences.setLanguage( 'kn' );
+		$.ime.preferences.setIM( 'kn-inscript' );
+		assert.strictEqual( $.ime.preferences.getPreviousLanguages().length, 2, 'Kannada added to previous languages' );
+		$.ime.preferences.setLanguage( 'hi' );
+		$.ime.preferences.setIM( 'hi-inscript' );
+		assert.strictEqual( $.ime.preferences.getIM('hi'), 'hi-inscript', 'Hindi Inscript is the preferred IM for Hindi' );
+		assert.strictEqual( $.ime.preferences.getIM('kn'), 'kn-inscript', 'Kannada Inscript is the preferred IM for Kannada' );
 	} );
 
 	QUnit.module( 'jquery.ime - input method rules tests', {
@@ -285,7 +293,7 @@
 	imeTest( {
 		description: 'Oriya InScript test',
 		tests: [
-			{ input: 'ka', output: 'କୋ' , },
+			{ input: 'ka', output: 'କୋ', description: 'Odia InScript ka -> କୋ'}
 		],
 		inputmethod: 'or-inscript',
 		$input: $( '<input>' ).attr( { id: 'or-inscript', type: 'text' } )
@@ -542,6 +550,18 @@
 	} );
 
 	imeTest ( {
+		description: 'Marathi InScript 2 test',
+		tests: [
+			{ input: [ [ '1', false ] ], output: '१', description: 'Marathi InScript regular 1 - १' },
+			{ input: [ [ '1', true ] ], output: '\u200d', description: 'Marathi InScript regular 1 - ZWJ' },
+			{ input: [ [ '2', false ] ], output: '२', description: 'Marathi InScript regular 2 - २' },
+			{ input: [ [ '2', true ] ], output: '\u200c', description: 'Marathi InScript regular 2 - ZWNJ' }
+		],
+		inputmethod: 'mr-inscript2',
+		$input: $( '<input>' ).attr( { id: 'mr', type: 'text' } )
+	} );
+
+	imeTest ( {
 		description : 'Kannada Transliteration test',
 		tests: [
 			{ input: 'd~ha', output: 'ದ್ಹ', description: 'd~ha for ದ್ಹ in Kannada transliteration' },
@@ -566,7 +586,7 @@
 			{ input: 'mu', output: 'ಮು', description: 'mu for ಮು in Kannada transliteration ' },
 			{ input: 'mU', output: 'ಮೂ', description: 'mU for ಮೂ in Kannada transliteration ' },
 			{ input: 'mo', output: 'ಮೊ', description: 'mo for ಮೊ in Kannada transliteration ' },
-			{ input: 'rAjxkumAr', output: 'ರಾಜ್‍ಕುಮಾರ್', description: 'rAjxkumAr for ರಾಜ್‍ಕುಮಾರ್ in Kannada transliteration ' },
+			{ input: 'rAjxkumAr', output: 'ರಾಜ್‍ಕುಮಾರ್', description: 'rAjxkumAr for ರಾಜ್‍ಕುಮಾರ್ in Kannada transliteration ' }, // with ZWJ
 			{ input: 'arha', output: 'ಅರ್ಹ', description: 'arha for ಅರ್ಕಾವತ್ತು in ಅರ್ಹ for Kannada transliteration ' },
 			{ input: 'dhvani', output: 'ಧ್ವನಿ', description: 'dhvani for ಧ್ವನಿ for Kannada transliteration ' },
 			{ input: 'marmara', output: 'ಮರ್ಮರ', description: 'marmara for ಮರ್ಮರ for Kannada transliteration ' },
@@ -578,8 +598,8 @@
 			{ input: 'braakeT', output: 'ಬ್ರಾಕೆಟ್', description: 'braakeT for  ಬ್ರ್ಯಾಕೆಟ್ for Kannada transliteration ' },
 			{ input: 'nOTna', output: 'ನೋಟ್ನ', description: 'noTna for ನೋಟ್ನ for Kannada transliteration ' },
 			{ input: 'saMskRta', output: 'ಸಂಸ್ಕೃತ', description: 'saMskRta for ಸಂಸ್ಕೃತ for Kannada transliteration ' },
-			{ input: 'aalTarxnETIv', output: 'ಆಲ್ಟರ್‍ನೇಟೀವ್', description: 'aalTarxnETIv for ಆಲ್ಟರ್‍ನೇಟೀವ್ for Kannada transliteration ' },
-			{ input: 'kaarxnalli', output: 'ಕಾರ್‍ನಲ್ಲಿ', description: 'kaarxnalli for ಕಾರ್‍ನಲ್ಲಿ for Kannada transliteration '},
+			{ input: 'aalTarxnETIv', output: 'ಆಲ್ಟರ್‍ನೇಟೀವ್', description: 'aalTarxnETIv for ಆಲ್ಟರ್‍ನೇಟೀವ್ for Kannada transliteration ' }, // with ZWJ
+			{ input: 'kaarxnalli', output: 'ಕಾರ್‍ನಲ್ಲಿ', description: 'kaarxnalli for ಕಾರ್‍ನಲ್ಲಿ for Kannada transliteration '}, // with ZWJ
 			{ input: 'a', output: 'ಅ', description: 'a for ಅ in Kannada transliteration' },
 			{ input: 'ka', output: 'ಕ', description: 'ka for ಕ in Kannada transliteration' },
 			{ input: 'Ka', output: 'ಖ', description: 'Ka for ಖ in Kannada transliteration' },
@@ -1204,7 +1224,7 @@
 			{ input: 'kM', output: 'ಕಂ', description: 'kM => ಕಂ' },
 			{ input: 'kH', output: 'ಕಃ', description: 'kH => ಕಃ' },
 			{ input: 'rAxfqfrIy', output: 'ರಾಷ್ಟ್ರೀಯ', description: 'complex consonants ರಾಷ್ಟ್ರೀಯ' },
-			{ input: 'rFfyAMkf', output: 'ರ‍್ಯಾಂಕ್', description: 'ZWJ ರ‍್ಯಾಂಕ್' }
+			{ input: 'rFfyAMkf', output: 'ರ‍್ಯಾಂಕ್', description: 'ZWJ ರ‍್ಯಾಂಕ್' } // with ZWJ
 		],
 		inputmethod: 'kn-kgp',
 		$input: $( '<input>' ).attr( {id: 'kn', type: 'text' } )
@@ -1561,6 +1581,21 @@
 		],
 		inputmethod: 'be-latin',
 		$input: $( '<input>' ).attr( { id: 'be-latin', type: 'text' } )
+	} );
+
+	imeTest( {
+		description: 'Javanese transliteration test',
+		tests: [
+			{ input: '\\A', output: 'A', description: 'Javanese transliteration escape mode - A' },
+			{input: '\\~', output: '~', description: 'Javanese transliteration - \\~ -> ~' },
+			{ input: 'A', output: 'ꦄ', description: 'Javanese transliteration - A' },
+			{ input: 'B', output: 'ꦨ', description: 'Javanese transliteration - B' },
+			{ input: 'y', output: 'ꦪ', description: 'Javanese transliteration - y' },
+			{ input: 'z', output: 'ꦗ꦳', description: 'Javanese transliteration - z' },
+			{ input: 'q`', output: '꧀', description: 'Javanese transliteration - q`' }
+		],
+		inputmethod: 'jv-transliteration',
+		$input: $( '<input>' ).attr( { id: 'jv-transliteration', type: 'text' } )
 	} );
 
 	// Basic sendkey-implementation
